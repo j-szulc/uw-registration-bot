@@ -21,22 +21,10 @@ cmd = "curl https://api.ipify.org?format=json | jq"
 
 if __name__ == "__main__":
 
-    with strike(stdout=sp.PIPE) as child:
-        output = child.stdout.read()
-        print(output)
-        obj = json.loads(output)
-        localDate = datetime.now(tz=tz)
-        remoteDateStr = obj["params"]["now"]
-        remoteDate = dateutil.parser.parse(remoteDateStr).replace(tzinfo=tz)
-        remoteGoalStr = obj["params"]["openDate"]
-        remoteGoal = dateutil.parser.parse(remoteGoalStr).replace(tzinfo=tz)
-        offset = remoteDate-localDate
-
-    def getRemoteDate():
-        return datetime.now(tz=tz)+offset
-
+    goal = datetime.fromtimestamp(1665989943)
+    print(goal)
     while True:
-        realDelta = remoteGoal - getRemoteDate()
+        realDelta = goal - datetime.now()
         print(f"Strike in: {realDelta}")
         if realDelta > delta:
             sleep(delta.total_seconds())
