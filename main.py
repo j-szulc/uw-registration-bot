@@ -2,7 +2,10 @@ from datetime import datetime, timedelta
 import subprocess as sp
 from time import sleep
 import json
-from backports.zoneinfo import ZoneInfo
+try:
+    import zoneinfo
+except ImportError:
+    from backports import zoneinfo
 import dateutil.parser
 
 
@@ -11,15 +14,16 @@ def strike(**kwargs):
 
 
 delta = timedelta(seconds=1)
-tz=ZoneInfo("Europe/Warsaw")
+tz=zoneinfo.ZoneInfo("Europe/Warsaw")
 
 # from Chrome DevTools
-cmd = "curl ... | jq"
+cmd = "curl https://api.ipify.org?format=json | jq"
 
 if __name__ == "__main__":
 
     with strike(stdout=sp.PIPE) as child:
         output = child.stdout.read()
+        print(output)
         obj = json.loads(output)
         localDate = datetime.now(tz=tz)
         remoteDateStr = obj["params"]["now"]
